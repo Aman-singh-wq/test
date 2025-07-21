@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/request-timeout: "3600"
+  namespace: gstg
+spec:
+ # ingressClassName: azure-application-gateway
+  rules:
+  - host: cassandrastg.ey.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: cassandra-proxy
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+      - cassandrastg.ey.com
+    secretName: cassandra-tls
